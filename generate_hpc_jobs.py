@@ -97,26 +97,25 @@ def main():
     job_body = '#!/bin/bash\n'
 
     if args.cluster == 'puma':
-        job_body += '#SBATCH --job-name=' + args.job_name + '\n'
-        job_body += '#SBATCH --partition=' + args.queue + '\n'
-        job_body += '#SBATCH --time=' + str(args.walltime) + ':00:00\n'
-        job_body += '#SBATCH --nodes=' + str(args.nodes) + '\n'
-        job_body += '#SBATCH --ntasks=' + str(args.tasks) + '\n'
-        job_body += '#SBATCH --mem=' + str(args.memory) + 'gb\n' if args.memory else ''
-        job_body += '#SBATCH --mail-user=' + args.email + '\n'
-        job_body += '#SBATCH --account=' + args.account + '\n'
+        job_body += '#SBATCH --job-name={}\n'.format(args.job_name)
+        job_body += '#SBATCH --partition={}\n'.format(args.queue)
+        job_body += '#SBATCH --time={}:00:00\n'.format(args.walltime)
+        job_body += '#SBATCH --nodes={}\n'.format(args.nodes)
+        job_body += '#SBATCH --ntasks={}\n'.format(args.tasks)
+        job_body += '#SBATCH --mem={}gb\n'.format(args.memory) if args.memory else ''
+        job_body += '#SBATCH --mail-user={}\n'.format(args.email)
+        job_body += '#SBATCH --account={}\n'.format(args.account)
         job_body += '#SBATCH --mail-type=ALL\n'
         job_body += '#SBATCH -o %x-%j.out\n'
         filename = args.outfile + '.slurm'
     else:
-        job_body += '#PBS -N' + args.job_name + '\n'
-        job_body += '#PBS -q' + args.queue + '\n'
-        job_body += '#PBS -l walltime=' + str(args.walltime) + ':00:00\n'
-        job_body += '#PBS -l select=' + str(args.nodes) + '\n'
-        job_body += '#PBS -l ncpus=' + str(args.tasks) + '\n'
-        job_body += '#PBS -l mem=' + str(args.memory) + 'gb\n' if args.memory else ''
-        job_body += '#PBS -M' + args.email + '\n'
-        job_body += '#PBS -W group_list=' + args.account + '\n'
+        job_body += '#PBS -N {}\n'.format(args.job_name)
+        job_body += '#PBS -q {}\n'.format(args.queue)
+        job_body += '#PBS -l walltime={}:00:00\n'.format(args.walltime)
+        job_body += '#PBS -l select={}:ncpus={}:mem={}\n'.format(args.nodes, args.tasks, args.memory) \
+            if args.memory else '#PBS -l select={}:ncpus={}\n'.format(args.nodes, args.tasks)
+        job_body += '#PBS -M {}\n'.format(args.email)
+        job_body += '#PBS -W group_list={}\n'.format(args.account)
         job_body += '#PBS -m be\n'
         job_body += '#PBS -j oe\n'
         job_body += '\nPBS_O_WORKDIR\n'
@@ -124,6 +123,8 @@ def main():
 
     with open(filename, 'w') as out:
         out.write(job_body + '\n')
+
+    print('Job script {} generated'.format(filename))
 
 
 # --------------------------------------------------
