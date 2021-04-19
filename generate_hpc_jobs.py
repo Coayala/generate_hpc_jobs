@@ -65,7 +65,7 @@ def get_args():
 
     parser.add_argument('-m',
                         '--memory',
-                        help='Gb of cpu memory. If 0, the default amount of memory for the number of nodes and tasks '
+                        help='Gb of cpu memory. If not set up, the default amount of memory for the number of nodes and tasks '
                              'will be requested',
                         metavar='INT',
                         type=int,
