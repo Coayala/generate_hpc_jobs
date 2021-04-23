@@ -118,7 +118,7 @@ def main():
         job_body += '#PBS -W group_list={}\n'.format(args.account)
         job_body += '#PBS -m be\n'
         job_body += '#PBS -j oe\n'
-        job_body += '\nPBS_O_WORKDIR\n'
+        job_body += '\ncd $PBS_O_WORKDIR\n'
         filename = args.outfile + '.pbs'
 
     with open(filename, 'w') as out:
