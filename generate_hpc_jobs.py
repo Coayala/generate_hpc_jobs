@@ -19,7 +19,8 @@ def get_args():
     parser.add_argument('cluster',
                         metavar='CLUSTER',
                         help='Cluster where the job will be submitted',
-                        choices=['puma', 'ocelote', 'elgato'])
+                        choices=['slurm', 'pbs'],
+                        default='slurm')
 
     parser.add_argument('-o',
                         '--outfile',
@@ -90,13 +91,13 @@ def get_args():
 
 # --------------------------------------------------
 def main():
-    """Make a jazz noise here"""
+    """Generate the job file"""
 
     args = get_args()
 
     job_body = '#!/bin/bash\n'
 
-    if args.cluster == 'puma':
+    if args.cluster == 'slurm':
         job_body += '#SBATCH --job-name={}\n'.format(args.job_name)
         job_body += '#SBATCH --partition={}\n'.format(args.queue)
         job_body += '#SBATCH --time={}:00:00\n'.format(args.walltime)
